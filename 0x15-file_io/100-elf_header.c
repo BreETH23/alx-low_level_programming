@@ -1,25 +1,10 @@
-#include <elf.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-void check_elf(unsigned char *e_ident);
-void print_magic(unsigned char *e_ident);
-void print_class(unsigned char *e_ident);
-void print_data(unsigned char *e_ident);
-void print_version(unsigned char *e_ident);
-void print_abi(unsigned char *e_ident);
-void print_osabi(unsigned char *e_ident);
-void print_type(unsigned int e_type, unsigned char *e_ident);
-void print_entry(unsigned long int e_entry, unsigned char *e_ident);
-void close_elf(int elf);
-
-
-
-
+#include <elf.h>
 
 /**
  * print_addr - prints address
@@ -201,22 +186,17 @@ void check_sys(char *ptr)
  * @ptr: magic.
  * Return: 1 if it is an elf file. 0 if not.
  */
-void check_elf(unsigned char *e_ident)
+int check_elf(char *ptr)
 {
-        int index;
+	int addr = (int)ptr[0];
+	char E = ptr[1];
+	char L = ptr[2];
+	char F = ptr[3];
 
-        for (index = 0; index <4; index++)
-        {
-               if (e_ident[index] != 127 &&
-                   e_ident[index] != 'E' &&
-                   e_ident[index] != 'L' &&
-                   e_ident[index] != 'F')
-                {
-                        dprint(STDERR_FILENO, "eRROR: nOT AN ELF FILE/N");
-                        exit(98);
-                }
-        }}
+	if (addr == 127 && E == 'E' && L == 'L' && F == 'F')
+		return (1);
 
+	return (0);
 }
 
 /**
